@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "relevance-logic-agent"
+version = "0.1.0"
+description = "An agent that generates machine-verifiable proofs in the relevance logic R."
+readme = "README.md"
+license = { text = "MIT" }
+authors = [
+  { name = "David Kinney", email = "kinney@wustl.edu" }
+]
+
+dependencies = [
+    "openai",
+    "openai-agents",
+    "fastmcp",
+    "pydantic"
+]
+
+requires-python = ">=3.9"
+
+[project.urls]
+Homepage = "https://github.com/davidbkinney/relevance_logic_agent"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["NaLBaNA*"]
