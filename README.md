@@ -5,7 +5,7 @@
 In classical logic, conditionals of the form "if P, then Q" are true whenever
 P is false or Q is true. This verifies some strange conditionals, like:
 "if snow is white then (if the moon is made of green cheese then the moon is made of green cheese)".
-That such a conditional would true seems to violate the commonsense notion that "if P, then Q"
+That such a conditional would be true seems to violate the commonsense notion that "if P, then Q"
 can only be true when P is _relevant_ to Q in some sense. 
 
 This has led many logicians to propose axiomatic systems meant to ensure that conditionals are
