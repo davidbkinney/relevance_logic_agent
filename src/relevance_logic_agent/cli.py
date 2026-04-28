@@ -5,9 +5,6 @@ from pathlib import Path
 
 from relevance_logic_agent import proof_generator
 
-import os
-os.environ["OPENAI_AGENTS_DISABLE_TRACING"] = "1"
-
 class TraceRecorder:
     def __init__(self, path):
         self.file = open(path, "w", encoding="utf-8") if path else None
