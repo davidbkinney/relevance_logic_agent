@@ -24,3 +24,5 @@ logic R (if such a proof exists), as well as a natural-language summary of the p
 For very hard proofs, the LLM agent sometimes fails to find a valid proof even when one exists.
 This in itself is interesting behavior; my intention with the project is to study the capabilities
 and limitations of agentic provers for non-classical logics.
+
+
