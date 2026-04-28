@@ -6,34 +6,33 @@ from pathlib import Path
 from relevance_logic_agent import proof_generator
 
 class TraceRecorder:
-    def __init__(self, path):
-        self.file = open(path, "w", encoding="utf-8") if path else None
+    def __init__(self, path: str | None):
+        self.path = Path(path) if path else None
+        self._file = None
 
-        # save original stdout
-        self._stdout = sys.stdout
+        if self.path:
+            self._file = open(self.path, "w", encoding="utf-8")
 
-        if self.file:
-            sys.stdout = self
+            self.emit("system", {
+                "time": str(datetime.now()),
+                "event": "session_start"
+            })
 
-    def write(self, text):
-        # write to terminal
-        self._stdout.write(text)
-        self._stdout.flush()
+    def emit(self, tag: str, data: dict):
+        if not self._file:
+            return
+        self._file.write(f"\n[{tag}]\n{data}\n")
+        self._file.flush()
 
-        # write to file
-        if self.file:
-            self.file.write(text)
-
-    def flush(self):
-        self._stdout.flush()
-        if self.file:
-            self.file.flush()
+    def write_raw(self, text: str):
+        """THIS is the important part."""
+        if self._file:
+            self._file.write(text)
+            self._file.flush()
 
     def close(self):
-        if self.file:
-            sys.stdout = self._stdout
-            self.file.close()
-
+        if self._file:
+            self._file.close()
 
 def main():
     parser = argparse.ArgumentParser()
@@ -44,26 +43,28 @@ def main():
     recorder = TraceRecorder(args.record)
 
     async def runner():
-        # 👇 THIS is the key change
-        recorder.write("=== PROMPT ===")
-        recorder.write(args.prompt)
-        recorder.write("")
+        recorder.write_raw(f"\n=== PROMPT ===\n{args.prompt}\n")
 
-        result = await proof_generator.generate_proof(
-            args.prompt,
-            recorder=recorder
-        )
+        # capture EVERYTHING printed
+        buffer = StringIO()
 
-        recorder.write("")
-        recorder.write("=== FINAL RESULT ===")
-        recorder.write(result.final_output)
+        with redirect_stdout(buffer), redirect_stderr(buffer):
+            result = await proof_generator.generate_proof(args.prompt)
+
+        output = buffer.getvalue()
+
+        # write full stream
+        recorder.write_raw("\n=== FULL TRACE ===\n")
+        recorder.write_raw(output)
+
+        recorder.write_raw("\n=== FINAL OUTPUT ===\n")
+        recorder.write_raw(result.final_output)
 
         recorder.close()
 
         print(result.final_output)
 
     asyncio.run(runner())
-
 
 if __name__ == "__main__":
     main()
