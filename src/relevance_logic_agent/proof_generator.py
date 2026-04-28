@@ -7,15 +7,13 @@ MCP server and generate the proof.
 
 # Import packages.
 from . import instructions, initialization
+import asyncio
+import sys
+from pathlib import Path
+import os
+import time
 from agents import Agent, Runner
 from agents.mcp import MCPServerStdio
-import asyncio
-import os
-from pathlib import Path
-import subprocess
-import sys
-import time
-
 
 
 # Create a path to the MCP server.
@@ -66,7 +64,7 @@ class TokenPacer:
                 await asyncio.sleep(0.5)
 
 
-TOKEN_PACER = TokenPacer(max_tokens_per_min=3000)
+TOKEN_PACER = TokenPacer(max_tokens_per_min=25_000)
 
 
 def estimate_tokens(text: str) -> int:
@@ -120,16 +118,9 @@ async def _run_agent(prompt: str):
     package_root = Path(__file__).resolve().parents[1]
 
     server_params = {
-    "command": sys.executable,
-    "args": ["-m", "relevance_logic_agent.mcp_server"],
-    "cwd": str(package_root),
-
-    # CRITICAL: fully isolate subprocess from Jupyter stdio
-    "preexec_fn": os.setsid if hasattr(os, "setsid") else None,
-
-    "stdin": subprocess.DEVNULL,
-    "stdout": subprocess.PIPE,
-    "stderr": subprocess.PIPE,
+        "command": sys.executable,
+        "args": ["-m", "relevance_logic_agent.mcp_server"],
+        "cwd": str(package_root),
     }
 
     async with TracingMCPServer(params=server_params) as mcp_server:
@@ -158,9 +149,9 @@ async def _run_agent(prompt: str):
 # USER-FACING PROOF GENERATION FUNCTION
 # =========================
 
-async def generate_proof(prompt: str):
-    return await _run_agent(prompt)
+def generate_proof(prompt: str):
+    return asyncio.run(_run_agent(prompt))
 
 
 if __name__ == "__main__":
-    asyncio.run(generate_proof("test"))
+    print(generate_proof("test"))
