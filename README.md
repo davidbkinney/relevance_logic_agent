@@ -33,5 +33,18 @@ First, install the package:
 pip install git+https://github.com/davidbkinney/relevance_logic_agent
 ```
 
+Next, input your OpenAI API key.
+
+```bash
+OPENAI_API_KEY="YOUR KEY"
+```
+
+Finally, use the --prompt and --record flags to generate a proof and save it to a .txt file:
+
+```bash
+relevance-logic --prompt "Prove B from A and if A then B." --record modus_ponens.txt
+```
+
+Examples of this and the outputs of some other, more complex queries are included in this repository.
 
 
