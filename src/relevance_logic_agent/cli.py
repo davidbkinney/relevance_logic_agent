@@ -4,7 +4,12 @@ from relevance_logic_agent import proof_generator
 
 def main():
     parser = argparse.ArgumentParser()
+    
     parser.add_argument("--prompt", required=True)
+
+    parser.add_argument("--record", type=str, default=None,
+                        help="Write full run output (including MCP traces) to a file")
+    
     args = parser.parse_args()
 
     async def runner():
