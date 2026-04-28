@@ -149,7 +149,7 @@ async def _run_agent(prompt: str):
 # USER-FACING PROOF GENERATION FUNCTION
 # =========================
 
-def generate_proof(prompt: str):
+async def generate_proof(prompt: str):
     return await _run_agent(prompt)
 
 
