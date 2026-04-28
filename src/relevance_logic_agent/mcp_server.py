@@ -62,14 +62,26 @@ def store(wff: WFF) -> int:
 
     key = (wff.kind, wff.value, wff.child, wff.left, wff.right)
 
-    for existing in STATE.wffs.values():
-        if (existing.kind, existing.value, existing.child,
-            existing.left, existing.right) == key:
-            return existing.id
+    # Check whether structurally identical WFF already exists
+    for existing_id, existing in STATE.wffs.items():
+        existing_key = (
+            existing.kind,
+            existing.value,
+            existing.child,
+            existing.left,
+            existing.right,
+        )
 
+        if existing_key == key:
+            # Ensure caller sees the canonical ID
+            wff.id = existing_id
+            return existing_id
+
+    # Otherwise create a new entry
     wff.id = STATE.update_num
     STATE.wffs[wff.id] = wff
     STATE.update_num += 1
+
     return wff.id
 
 
