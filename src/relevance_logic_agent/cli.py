@@ -5,6 +5,8 @@ from pathlib import Path
 
 from relevance_logic_agent import proof_generator
 
+import os
+os.environ["OPENAI_AGENTS_DISABLE_TRACING"] = "1"
 
 class Tee:
     """
