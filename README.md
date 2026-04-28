@@ -29,9 +29,9 @@ The agent is operated entirely from the command line. Here is a simple workflow 
 
 First, install the package:
 
-'''
+```bash
 pip install git+https://github.com/davidbkinney/relevance_logic_agent
-'''
+```
 
 
 
