@@ -2,38 +2,67 @@ import asyncio
 import argparse
 import sys
 from pathlib import Path
-
+from datetime import datetime
 from relevance_logic_agent import proof_generator
 
+
+# ----------------------------
+# Terminal Tee (THE KEY FIX)
+# ----------------------------
+class Tee:
+    """
+    Duplicates ALL stdout/stderr to both terminal AND file.
+    This works at the stream level, so it captures:
+    - print()
+    - logging
+    - MCP stdout
+    - FastMCP banners
+    - tool traces
+    """
+
+    def __init__(self, file):
+        self.file = file
+        self.stdout = sys.stdout
+        self.stderr = sys.stderr
+
+    def write(self, data):
+        self.stdout.write(data)
+        if self.file:
+            self.file.write(data)
+
+    def flush(self):
+        self.stdout.flush()
+        if self.file:
+            self.file.flush()
+
+
+# ----------------------------
+# Recorder (simple wrapper)
+# ----------------------------
 class TraceRecorder:
     def __init__(self, path: str | None):
         self.path = Path(path) if path else None
-        self._file = None
+        self.file = None
 
         if self.path:
-            self._file = open(self.path, "w", encoding="utf-8")
+            self.file = open(self.path, "w", encoding="utf-8")
 
-            self.emit("system", {
-                "time": str(datetime.now()),
-                "event": "session_start"
-            })
-
-    def emit(self, tag: str, data: dict):
-        if not self._file:
+    def write_header(self, prompt: str):
+        if not self.file:
             return
-        self._file.write(f"\n[{tag}]\n{data}\n")
-        self._file.flush()
-
-    def write_raw(self, text: str):
-        """THIS is the important part."""
-        if self._file:
-            self._file.write(text)
-            self._file.flush()
+        self.file.write("\n=== PROMPT ===\n")
+        self.file.write(prompt + "\n")
+        self.file.write("\n=== RUN LOG ===\n\n")
+        self.file.flush()
 
     def close(self):
-        if self._file:
-            self._file.close()
+        if self.file:
+            self.file.close()
 
+
+# ----------------------------
+# CLI
+# ----------------------------
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--prompt", required=True)
@@ -43,28 +72,36 @@ def main():
     recorder = TraceRecorder(args.record)
 
     async def runner():
-        recorder.write_raw(f"\n=== PROMPT ===\n{args.prompt}\n")
+        recorder.write_header(args.prompt)
 
-        # capture EVERYTHING printed
-        buffer = StringIO()
+        tee = None
+        if args.record:
+            f = open(args.record, "a", encoding="utf-8")
 
-        with redirect_stdout(buffer), redirect_stderr(buffer):
+            tee = Tee(f)
+            sys.stdout = tee
+            sys.stderr = tee
+
+        try:
+            print("=== RUNNING AGENT ===")
+
             result = await proof_generator.generate_proof(args.prompt)
 
-        output = buffer.getvalue()
+            print("\n=== FINAL RESULT ===\n")
+            print(result.final_output)
 
-        # write full stream
-        recorder.write_raw("\n=== FULL TRACE ===\n")
-        recorder.write_raw(output)
+        finally:
+            # restore terminal
+            sys.stdout = sys.__stdout__
+            sys.stderr = sys.__stderr__
 
-        recorder.write_raw("\n=== FINAL OUTPUT ===\n")
-        recorder.write_raw(result.final_output)
+            if args.record:
+                f.close()
 
-        recorder.close()
-
-        print(result.final_output)
+        return result
 
     asyncio.run(runner())
+
 
 if __name__ == "__main__":
     main()
