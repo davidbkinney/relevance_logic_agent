@@ -35,7 +35,7 @@ class ProofStep(BaseModel):
 # Class specifying the state of reasoning 
 # (all WFFs and proof steps).
 class State(BaseModel):
-    update_num: int = 1 #Number that increments every time the state is updated.
+    update_num: int = 0 #Number that increments every time the state is updated.
     wffs: dict[int, WFF] = Field(default_factory=dict) # List of all WFFs available for use.
     proof: list[ProofStep] = Field(default_factory=list) # List of all steps in the proof.
 
