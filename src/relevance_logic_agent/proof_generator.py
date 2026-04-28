@@ -150,7 +150,7 @@ async def _run_agent(prompt: str):
 # =========================
 
 def generate_proof(prompt: str):
-    return asyncio.run(_run_agent(prompt))
+    return await _run_agent(prompt)
 
 
 if __name__ == "__main__":
