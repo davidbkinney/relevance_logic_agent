@@ -7,19 +7,9 @@ from relevance_logic_agent import proof_generator
 
 
 # ----------------------------
-# Terminal Tee (THE KEY FIX)
+# Terminal Tee
 # ----------------------------
 class Tee:
-    """
-    Duplicates ALL stdout/stderr to both terminal AND file.
-    This works at the stream level, so it captures:
-    - print()
-    - logging
-    - MCP stdout
-    - FastMCP banners
-    - tool traces
-    """
-
     def __init__(self, file):
         self.file = file
         self.stdout = sys.stdout
@@ -37,7 +27,7 @@ class Tee:
 
 
 # ----------------------------
-# Recorder (simple wrapper)
+# Recorder
 # ----------------------------
 class TraceRecorder:
     def __init__(self, path: str | None):
@@ -83,12 +73,7 @@ def main():
             sys.stderr = tee
 
         try:
-            print("=== RUNNING AGENT ===")
-
             result = await proof_generator.generate_proof(args.prompt)
-
-            print("\n=== FINAL RESULT ===\n")
-            print(result.final_output)
 
         finally:
             # restore terminal
