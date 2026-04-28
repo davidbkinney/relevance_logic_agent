@@ -64,7 +64,7 @@ class TokenPacer:
                 await asyncio.sleep(0.5)
 
 
-TOKEN_PACER = TokenPacer(max_tokens_per_min=25_000)
+TOKEN_PACER = TokenPacer(max_tokens_per_min=3000)
 
 
 def estimate_tokens(text: str) -> int:
