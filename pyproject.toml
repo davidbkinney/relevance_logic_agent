@@ -16,6 +16,11 @@ dependencies = [
   "pydantic"
 ]
 
+[project.optional-dependencies]
+dev = [
+  "pytest",
+]
+
 [project.scripts]
 relevance-logic = "relevance_logic_agent.cli:main"
 
