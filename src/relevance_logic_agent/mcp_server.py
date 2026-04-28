@@ -1,7 +1,7 @@
 """
 mcp_server.py
 
-Constructs the tools needed to implement a relevanc
+Constructs the tools needed to implement a relevance
 logic prover, and exposes them to the LLM agent.
 """
 
@@ -902,7 +902,7 @@ def disjunction_elimination1(a_id:int, b_id:int, c_id:int):
 @mcp.tool()
 def disjunction_elimination2(a_id:int, b_id:int, c_id:int):
     """
-    Adds an axiom of the form ((A → B) & (B → C)) → ((A v B) → C) 
+    Adds an axiom of the form ((A → C) & (B → C)) → ((A v B) → C) 
     to the proof. 
 
     Args: 
@@ -928,7 +928,7 @@ def disjunction_elimination2(a_id:int, b_id:int, c_id:int):
         id=0,
         kind="conditional",
         left=A.id,
-        right=B.id
+        right=C.id
     ))
 
     antecedent_right_id = store(WFF(
