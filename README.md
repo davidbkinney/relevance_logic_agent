@@ -13,12 +13,12 @@ only true when the antecedent is relevant to the consequent. These are known as 
 in American English and "relevant logics" in British English. Of these, the strongest well-known
 system is the relevance logic R.
 
-This Python package allows users, with a single function call to: 
+This Python package allows users to, with a single command:
 
-1. Enter natural-language queries to an LLM (GPT-5.4),
-2. Launch an MCP server locally via stdio that exposes the LLM to a Python-based prover agent 
-for the relevance logic R.
-3. Receive as output a machine-verified proof of the requested proposition in the relevance
+1. enter natural-language queries to an LLM (GPT-5.4),
+2. launch an MCP server locally via stdio that exposes the LLM to a Python-based prover agent 
+for the relevance logic R, and
+3. receive as output a machine-verified proof of the requested proposition in the relevance
 logic R (if such a proof exists), as well as a natural-language summary of the proof.
 
 For very hard proofs, the LLM agent sometimes fails to find a valid proof even when one exists.
