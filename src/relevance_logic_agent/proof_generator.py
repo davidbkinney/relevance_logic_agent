@@ -154,4 +154,4 @@ async def generate_proof(prompt: str):
 
 
 if __name__ == "__main__":
-    print(generate_proof("test"))
+    asyncio.run(generate_proof("test"))
