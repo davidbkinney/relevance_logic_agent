@@ -123,7 +123,11 @@ async def _run_agent(prompt: str):
     "command": sys.executable,
     "args": ["-m", "relevance_logic_agent.mcp_server"],
     "cwd": str(package_root),
-    "stdin": subprocess.PIPE,
+
+    # CRITICAL: fully isolate subprocess from Jupyter stdio
+    "preexec_fn": os.setsid if hasattr(os, "setsid") else None,
+
+    "stdin": subprocess.DEVNULL,
     "stdout": subprocess.PIPE,
     "stderr": subprocess.PIPE,
     }
