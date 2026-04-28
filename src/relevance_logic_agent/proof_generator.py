@@ -7,13 +7,15 @@ MCP server and generate the proof.
 
 # Import packages.
 from . import instructions, initialization
-import asyncio
-import sys
-from pathlib import Path
-import os
-import time
 from agents import Agent, Runner
 from agents.mcp import MCPServerStdio
+import asyncio
+import os
+from pathlib import Path
+import subprocess
+import sys
+import time
+
 
 
 # Create a path to the MCP server.
@@ -118,9 +120,12 @@ async def _run_agent(prompt: str):
     package_root = Path(__file__).resolve().parents[1]
 
     server_params = {
-        "command": sys.executable,
-        "args": ["-m", "relevance_logic_agent.mcp_server"],
-        "cwd": str(package_root),
+    "command": sys.executable,
+    "args": ["-m", "relevance_logic_agent.mcp_server"],
+    "cwd": str(package_root),
+    "stdin": subprocess.PIPE,
+    "stdout": subprocess.PIPE,
+    "stderr": subprocess.PIPE,
     }
 
     async with TracingMCPServer(params=server_params) as mcp_server:
