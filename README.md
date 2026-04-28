@@ -25,4 +25,13 @@ For very hard proofs, the LLM agent sometimes fails to find a valid proof even w
 This in itself is interesting behavior; my intention with the project is to study the capabilities
 and limitations of agentic provers for non-classical logics.
 
+The agent is operated entirely from the command line. Here is a simple workflow to get started. 
+
+First, install the package:
+
+'''
+pip install git+https://github.com/davidbkinney/relevance_logic_agent
+'''
+
+
 
