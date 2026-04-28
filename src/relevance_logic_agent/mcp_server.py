@@ -1258,7 +1258,7 @@ def adjunction(a_id: int, b_id: int):
 
     step = ProofStep(
         id=new_id,
-        rule="conjunction_introduction",
+        rule="adjunction",
         args=[a_id, b_id]
     )
 
