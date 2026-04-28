@@ -12,14 +12,29 @@ class TraceRecorder:
     def __init__(self, path):
         self.file = open(path, "w", encoding="utf-8") if path else None
 
-    def write(self, text: str):
+        # save original stdout
+        self._stdout = sys.stdout
+
+        if self.file:
+            sys.stdout = self
+
+    def write(self, text):
+        # write to terminal
+        self._stdout.write(text)
+        self._stdout.flush()
+
+        # write to file
         if self.file:
             self.file.write(text)
-            self.file.write("\n")
+
+    def flush(self):
+        self._stdout.flush()
+        if self.file:
             self.file.flush()
 
     def close(self):
         if self.file:
+            sys.stdout = self._stdout
             self.file.close()
 
 
