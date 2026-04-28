@@ -13,11 +13,11 @@ only true when the antecedent is relevant to the consequent. These are known as 
 in American English and "relevant logics" in British English. Of these, the strongest well-known
 system is the relevance logic R.
 
-This Python package allows users to, with a single command:
+This repository implements a command line interface that allows users to, with a single command:
 
 1. enter natural-language queries to an LLM (GPT-5.4),
-2. launch an MCP server locally via stdio that exposes the LLM to a Python-based prover agent 
-for the relevance logic R, and
+2. launch an MCP server locally via stdio that exposes the LLM to a Python-based proof system 
+for the relevance logic R, which the LLM can interact with agentically, and
 3. receive as output a machine-verified proof of the requested proposition in the relevance
 logic R (if such a proof exists), as well as a natural-language summary of the proof.
 
@@ -25,7 +25,7 @@ For very hard proofs, the LLM agent sometimes fails to find a valid proof even w
 This in itself is interesting behavior; my intention with the project is to study the capabilities
 and limitations of agentic provers for non-classical logics.
 
-The agent is operated entirely from the command line. Here is a simple workflow to get started. 
+Here is a simple example workflow to get started. 
 
 First, install the package:
 
