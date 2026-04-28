@@ -26,4 +26,4 @@ Homepage = "https://github.com/davidbkinney/relevance_logic_agent"
 
 [tool.setuptools.packages.find]
 where = ["src"]
-include = ["NaLBaNA*"]
+include = ["relevance_logic_agent*"]
