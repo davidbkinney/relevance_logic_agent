@@ -1,37 +1,84 @@
-import argparse
 import asyncio
-from datetime import datetime
+import argparse
+import sys
 from pathlib import Path
+
 from relevance_logic_agent import proof_generator
 
-def write_record(path, prompt, output):
+
+class Tee:
+    """
+    Duplicates stdout to both terminal and a file.
+    """
+    def __init__(self, file):
+        self.file = file
+        self.stdout = sys.stdout
+
+    def write(self, data):
+        self.stdout.write(data)
+        self.file.write(data)
+
+    def flush(self):
+        self.stdout.flush()
+        self.file.flush()
+
+
+def start_record(path: str, prompt: str):
+    """
+    Start recording full CLI session (prompt + full stdout stream).
+    """
     Path(path).parent.mkdir(parents=True, exist_ok=True)
 
-    with open(path, "w") as f:
-        f.write("=== PROMPT ===\n")
-        f.write(prompt + "\n\n")
+    f = open(path, "w", buffering=1)
 
-        f.write("=== OUTPUT ===\n")
-        f.write(output + "\n")
+    f.write("=== PROMPT ===\n")
+    f.write(prompt + "\n\n")
+    f.write("=== FULL TRACE ===\n")
+
+    sys.stdout = Tee(f)
+
+    return f
+
+
+def stop_record(original_stdout, file_handle):
+    """
+    Restore stdout and close file safely.
+    """
+    sys.stdout = original_stdout
+    if file_handle:
+        file_handle.close()
+
 
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--prompt", required=True)
-    parser.add_argument("--record", type=str, default=None)
+    parser.add_argument(
+        "--record",
+        type=str,
+        default=None,
+        help="Path to save full execution trace (prompt + MCP stream + output)"
+    )
 
     args = parser.parse_args()
+
+    original_stdout = sys.stdout
+    record_file = None
+
+    # Start recording if requested
+    if args.record:
+        record_file = start_record(args.record, args.prompt)
 
     async def runner():
         result = await proof_generator.generate_proof(args.prompt)
 
-        output = result.final_output
+        print("\n=== FINAL RESULT ===\n")
+        print(result.final_output)
 
-        print(output)
+    try:
+        asyncio.run(runner())
+    finally:
+        stop_record(original_stdout, record_file)
 
-        if args.record:
-            write_record(args.record, args.prompt, output)
-
-    asyncio.run(runner())
 
 if __name__ == "__main__":
     main()
