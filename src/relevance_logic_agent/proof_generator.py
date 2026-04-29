@@ -7,13 +7,13 @@ MCP server and generate the proof.
 
 # Import packages.
 from . import instructions, initialization
+from agents import Agent, Runner
+from agents.mcp import MCPServerStdio
 import asyncio
 import sys
 from pathlib import Path
 import os
 import time
-from agents import Agent, Runner
-from agents.mcp import MCPServerStdio
 
 
 # Create a path to the MCP server.
