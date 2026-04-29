@@ -1,10 +1,9 @@
-import asyncio
 import argparse
-import sys
-from pathlib import Path
+import asyncio
 from datetime import datetime
+from pathlib import Path
 from relevance_logic_agent import proof_generator
-
+import sys
 
 # ----------------------------
 # Terminal Tee
