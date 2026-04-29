@@ -36,7 +36,7 @@ pip install git+https://github.com/davidbkinney/relevance_logic_agent
 Next, input your OpenAI API key.
 
 ```bash
-OPENAI_API_KEY="YOUR KEY"
+export OPENAI_API_KEY="YOUR KEY"
 ```
 
 Finally, use the --prompt and --record flags to generate a proof and save it to a .txt file:
