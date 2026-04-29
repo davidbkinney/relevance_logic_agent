@@ -45,6 +45,6 @@ Finally, use the --prompt and --record flags to generate a proof and save it to 
 relevance-logic --prompt "Prove B from A and if A then B." --record modus_ponens.txt
 ```
 
-Examples of this and the outputs of some other, more complex queries are included in this repository.
+Examples outputs for this and some other, more complex queries are included in this repository.
 
 
